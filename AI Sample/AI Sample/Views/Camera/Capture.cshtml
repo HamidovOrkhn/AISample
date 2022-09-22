@@ -1,0 +1,65 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="col-md-2"></div>
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">Camera</div>
+        <div class="panel-body">
+            <div id="my_camera"></div>
+            <!-- A button for taking snaps -->
+            <form>
+                <input type="button" class="btn btn-success" value="Take Snapshot" onClick="take_snapshot()">
+            </form>
+
+        </div>
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">Captured Photo</div>
+        <div class="panel-body">
+            <div id="results">Your captured image will appear here...</div>
+        </div>
+        <br />
+        <br />
+    </div>
+</div>
+@section Scripts{
+    <script src="~/webcamjs/webcam.js"></script>
+    <!-- Configure a few settings and attach camera -->
+    <script language="JavaScript">
+        Webcam.set({
+            width: 320,
+            height: 240,
+            image_format: 'jpeg',
+            jpeg_quality: 90
+        });
+        Webcam.attach('#my_camera');
+    </script>
+    <!-- Code to handle taking the snapshot and displaying it locally -->
+    <script language="JavaScript">
+        function take_snapshot() {
+            // take snapshot and get image data
+            Webcam.snap(function (data_uri) {
+                // display results in page
+
+
+                Webcam.upload(data_uri,
+                    '/Camera/Capture',
+                    function (code, text) {
+                       // console.log({ dt: code, dt1:  })
+                        document.getElementById('results').innerHTML =
+                            '<img src="' +
+                            JSON.parse(text).imageBase64String +
+                            '"/>';
+                        alert('Photo Captured');
+                    });
+
+            });
+        }
+    </script>
+
+} 
